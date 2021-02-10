@@ -28,7 +28,7 @@ class Admin extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'isSuperAdmin'
+        'password', 'remember_token', 'isSuperAdmin', 'id', 'email_verified_at'
     ];
 
     /**

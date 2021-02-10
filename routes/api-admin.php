@@ -18,7 +18,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/login', 'Admin\AuthController@login');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:admins', 'auth:api']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:admins']], function () {
     Route::post('/logout', 'Admin\AuthController@logout');
     Route::post('/profile', 'Admin\AuthController@profile');
     Route::post('/register', 'Admin\AuthController@register');
