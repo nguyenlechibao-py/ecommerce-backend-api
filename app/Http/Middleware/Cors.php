@@ -19,6 +19,6 @@ class Cors
             ->header('Access-Control-Allow-Origin', 'http://localhost:4000')
             ->header('Access-Control-Allow-Methods', '*')
             ->header('Access-Control-Allow-Credentials', 'true')
-            ->header('Access-Control-Allow-Headers', 'X-CSRF-Token');
+            ->header('Access-Control-Allow-Headers', '*');
     }
 }
