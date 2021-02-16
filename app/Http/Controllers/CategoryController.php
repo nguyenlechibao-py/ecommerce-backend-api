@@ -30,10 +30,17 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), $this->rules());
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
+            return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
-        $category = Category::create($request->only(['name']));
-        return response()->json(['message' => 'Category has been created', 'data' => $category]);
+        $category = Category::create([
+            'name' => $request->name,
+            'description' => $request->description || ""
+        ]);
+        return response()->json([
+            'is_success' => true,
+            'message' => 'Category has been created',
+            'data' => $category
+        ]);
     }
 
     /**
@@ -96,7 +103,7 @@ class CategoryController extends Controller
     {
         return [
             'name' => 'required|unique:categories|max:255',
-            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'max:255'
         ];
     }
 }

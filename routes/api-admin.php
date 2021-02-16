@@ -24,8 +24,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admins']], function ()
     Route::post('/register', 'Admin\AuthController@register');
 });
 
-// Categories
-Route::get('/categories', 'CategoryController@index');
+// CATEGORIES ROUTES
+Route::prefix('category')->middleware('auth:admins')->group(function () {
+    Route::post('/add-new-category', 'CategoryController@store');
+});
+
 Route::get('/categories/{id}', 'CategoryController@show');
 Route::post('/categories', 'CategoryController@store');
 Route::put('/categories/{id}', 'CategoryController@update');
