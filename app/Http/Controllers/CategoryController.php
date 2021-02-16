@@ -29,13 +29,13 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), $this->rules());
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
         $category = Category::create($request->only(['name']));
         return response()->json(['message' => 'Category has been created', 'data' => $category]);
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -45,7 +45,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::find($id);
-        if(!$category)
+        if (!$category)
             return response()->json(['message' => 'Category doesn\'t exist'], 404);
         return new CategoryResource($category);
     }
@@ -60,11 +60,11 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::find($id);
-        if(!$category) {
+        if (!$category) {
             return response()->json(['message' => 'Category doesn\'t exist'], 404);
         }
         $validator = Validator::make($request->all(), $this->rules());
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
         $category->update($request->only(['name']));
@@ -80,7 +80,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
-        if(!$category) {
+        if (!$category) {
             return response()->json(['message' => 'Category doesn\'t exist'], 404);
         }
         $category->delete();
@@ -92,9 +92,11 @@ class CategoryController extends Controller
      * 
      * @return array;
      */
-    public function rules() {
+    public function rules()
+    {
         return [
-            'name' => 'required|unique:categories|max:255'
+            'name' => 'required|unique:categories|max:255',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
