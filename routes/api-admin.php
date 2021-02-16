@@ -22,12 +22,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admins']], function ()
     Route::post('/logout', 'Admin\AuthController@logout');
     Route::post('/profile', 'Admin\AuthController@profile');
     Route::post('/register', 'Admin\AuthController@register');
+    // Categories
+    Route::get('/categories', 'CategoryController@index');
+    Route::get('/categories/{id}', 'CategoryController@show');
+    Route::group(['middleware'=> 'admin.auth'], function () {
+        Route::post('/categories', 'CategoryController@store');
+        Route::put('/categories/{id}', 'CategoryController@update');
+        Route::delete('/categories/{id}', 'CategoryController@destroy');
+    });
+    
 });
-
-// Categories
-Route::get('/categories', 'CategoryController@index');
-Route::get('/categories/{id}', 'CategoryController@show');
-Route::post('/categories', 'CategoryController@store');
-Route::put('/categories/{id}', 'CategoryController@update');
-Route::delete('/categories/{id}', 'CategoryController@destroy');
-// 
