@@ -15,7 +15,7 @@ class AddFieldsCategoriesTable extends Migration
     {
         Schema::table('categories', function(Blueprint $table) {
             $table->string('description', 255)->nullable();
-            $table->string('image_url', 255)->nullable();
+            $table->string('image', 255)->nullable();
         });
     }
 

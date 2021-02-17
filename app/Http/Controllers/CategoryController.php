@@ -35,7 +35,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description ?? "",
-            'image_url' => $request->image_url ?? "",
+            'image' => $request->image ?? "",
         ]);
         return response()->json(['is_success' => true, 'message' => 'Category has been created', 'data' => $category]);
     }
@@ -74,7 +74,7 @@ class CategoryController extends Controller
         $category->update([
             'name' => $request->name,
             'description' => $request->description ?? "",
-            'image_url' => $request->image_url ?? "",
+            'image' => $request->image ?? "",
         ]);
         return response()->json(['is_success' => true, 'message' => 'Category has been updated', 'data' => $category], 200);
     }
@@ -104,7 +104,7 @@ class CategoryController extends Controller
         return [
             'name' => 'required|unique:categories|max:255',
             'description' => 'max:255',
-            'image_url' => 'max:255',
+            'image' => 'max:255',
         ];
     }
 }
