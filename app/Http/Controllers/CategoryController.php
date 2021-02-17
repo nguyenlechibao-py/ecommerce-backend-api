@@ -34,13 +34,10 @@ class CategoryController extends Controller
         }
         $category = Category::create([
             'name' => $request->name,
-            'description' => $request->description || ""
+            'description' => $request->description ?? "",
+            'image' => $request->image ?? "",
         ]);
-        return response()->json([
-            'is_success' => true,
-            'message' => 'Category has been created',
-            'data' => $category
-        ]);
+        return response()->json(['is_success' => true, 'message' => 'Category has been created', 'data' => $category]);
     }
 
     /**
@@ -53,7 +50,7 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if (!$category)
-            return response()->json(['message' => 'Category doesn\'t exist'], 404);
+            return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
         return new CategoryResource($category);
     }
 
@@ -68,14 +65,18 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if (!$category) {
-            return response()->json(['message' => 'Category doesn\'t exist'], 404);
+            return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
         }
         $validator = Validator::make($request->all(), $this->rules());
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
+            return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
-        $category->update($request->only(['name']));
-        return response()->json(['message' => 'Category has been updated', 'data' => $category], 200);
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description ?? "",
+            'image' => $request->image ?? "",
+        ]);
+        return response()->json(['is_success' => true, 'message' => 'Category has been updated', 'data' => $category], 200);
     }
 
     /**
@@ -88,10 +89,10 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if (!$category) {
-            return response()->json(['message' => 'Category doesn\'t exist'], 404);
+            return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
         }
         $category->delete();
-        return response()->json(['message' => 'Category has been deleted'], 200);
+        return response()->json(['is_success' => true, 'message' => 'Category has been deleted'], 200);
     }
 
     /**
@@ -103,7 +104,8 @@ class CategoryController extends Controller
     {
         return [
             'name' => 'required|unique:categories|max:255',
-            'description' => 'max:255'
+            'description' => 'max:255',
+            'image' => 'max:255',
         ];
     }
 }

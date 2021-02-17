@@ -30,7 +30,11 @@ Route::prefix('category')->middleware('auth:admins')->group(function () {
 });
 
 Route::get('/categories/{id}', 'CategoryController@show');
-Route::post('/categories', 'CategoryController@store');
-Route::put('/categories/{id}', 'CategoryController@update');
-Route::delete('/categories/{id}', 'CategoryController@destroy');
+
+Route::group(['prefix' => 'categories', 'middleware'=> ['auth:admins']], function () {
+    Route::post('/add', 'CategoryController@store');
+    Route::put('/update/{id}', 'CategoryController@update');
+    Route::delete('/delete/{id}', 'CategoryController@destroy');
+});
+
 // 
