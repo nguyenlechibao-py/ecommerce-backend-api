@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
@@ -53,11 +54,17 @@ class MediaController extends Controller
             $mediaPath = $request->file('media');
             $name = $mediaPath->getClientOriginalName();
 
-            $path = $request->file('media')->store('/uploads');
+            /**
+             * Store to storage
+             * And get url with relative path
+             * 
+             * @return string path/to/image
+             */
+            $path = $request->file('media')->store('/uploads', 'public');
 
             $media = new Media;
             $media->name = $name;
-            $media->url = '/public/' . $path;
+            $media->url = "/storage/" . $path;
 
             try {
                 $media->save();
