@@ -67,15 +67,15 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
         }
-        $validator = Validator::make($request->all(), $this->rules());
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:categories|max:255',
+            'description' => 'max:255',
+            'image' => 'max:255',
+        ]);
         if ($validator->fails()) {
             return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
-        $category->update([
-            'name' => $request->name,
-            'description' => $request->description ?? "",
-            'image' => $request->image ?? "",
-        ]);
+        $category->update($request->all());
         return response()->json(['is_success' => true, 'message' => 'Category has been updated', 'data' => $category], 200);
     }
 
