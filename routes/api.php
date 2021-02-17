@@ -21,3 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware(['auth:admins'])->prefix('media')->group(function () {
     Route::post('/upload-new-media', 'Admin\MediaController@store');
 });
+
+Route::get('/media', 'Admin\MediaController@index');
