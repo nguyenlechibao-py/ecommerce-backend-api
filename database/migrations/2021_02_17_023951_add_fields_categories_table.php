@@ -13,7 +13,7 @@ class AddFieldsCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function(Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             $table->string('description', 255)->nullable();
             $table->string('image', 255)->nullable();
         });
