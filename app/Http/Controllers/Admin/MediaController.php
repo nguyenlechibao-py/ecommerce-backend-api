@@ -134,7 +134,7 @@ class MediaController extends Controller
                 'message' => 'Media doesn\'t exist',
             ], 404);
         }
-        $validator = Validator::make($request->all(), $this->rules());
+        $validator = Validator::make($request->all(), ['media' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
         if ($validator->fails()) {
             return response()->json([
                 'is_success' => false,
