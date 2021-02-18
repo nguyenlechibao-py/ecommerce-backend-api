@@ -23,3 +23,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admins']], function ()
     Route::post('/profile', 'Admin\AuthController@profile');
     Route::post('/register', 'Admin\AuthController@register');
 });
+
+Route::middleware(['auth:admins'])->prefix('media')->namespace('Admin')->group(function () {
+    Route::post('/upload-new-media', 'MediaController@store');
+    Route::put('/update/{id}', 'MediaController@update');
+    Route::delete('/delete/{id}', 'MediaController@destroy');
+});
+
+Route::get('/media', 'Admin\MediaController@index');
+Route::get('/media/{id}', 'Admin\MediaController@show');
