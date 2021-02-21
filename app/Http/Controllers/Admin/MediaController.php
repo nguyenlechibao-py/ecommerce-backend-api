@@ -204,7 +204,7 @@ class MediaController extends Controller
             if($storage) {
                 return response()->json([
                     'is_success' => true,
-                    'message' => 'Media has been deleted',
+                    'message' => 'Media has been deleted.',
                 ], 200);
             }
         }
