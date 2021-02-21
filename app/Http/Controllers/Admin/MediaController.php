@@ -200,7 +200,7 @@ class MediaController extends Controller
         try {
             $fileUrl = $media->url;
             $file = str_replace('/storage', '', $fileUrl);
-            Storage::disk('public')->delete($file);
+            $storage = Storage::disk('public')->delete($file);
             if($storage) {
                 return response()->json([
                     'is_success' => true,
