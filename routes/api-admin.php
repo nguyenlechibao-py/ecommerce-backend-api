@@ -38,4 +38,12 @@ Route::group(['prefix' => 'categories', 'middleware' => ['auth:admins']], functi
     Route::delete('/delete/{id}', 'CategoryController@destroy');
 });
 
-// 
+// MEDIA ROUTES
+Route::middleware(['api'])->prefix('media')->namespace('Admin')->group(function () {
+    Route::post('/upload-new-media', 'MediaController@store');
+    Route::put('/update/{id}', 'MediaController@update');
+    Route::delete('/delete/{id}', 'MediaController@destroy');
+});
+
+Route::get('/media', 'Admin\MediaController@index');
+Route::get('/media/{id}', 'Admin\MediaController@show');
