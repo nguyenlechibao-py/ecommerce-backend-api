@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
+use Intervention\Image\Facades\Image;
 
 class MediaController extends Controller
 {
@@ -42,6 +43,7 @@ class MediaController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), $this->rules());
+        // var_dump($request->all());
 
         if ($validator->fails()) {
             return response()->json([
@@ -51,7 +53,7 @@ class MediaController extends Controller
             ], 401);
         }
 
-        if ($request->file('media')) {
+        if ($request->get('media')) {
             // store media into /storage/uploads folder
             $mediaPath = $request->file('media');
             $name = $mediaPath->getClientOriginalName();
@@ -95,7 +97,7 @@ class MediaController extends Controller
     public function show($id)
     {
         $media = Media::find($id);
-        if(!$media) {
+        if (!$media) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Media doesn\'t exist',
@@ -128,7 +130,7 @@ class MediaController extends Controller
     public function update(Request $request, $id)
     {
         $media = Media::find($id);
-        if(!$media) {
+        if (!$media) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Media doesn\'t exist',
@@ -147,7 +149,7 @@ class MediaController extends Controller
         $file = str_replace('/storage', '', $fileUrl);
         Storage::disk('public')->delete($file);
         // check media and update
-        if($request->file('media')) {
+        if ($request->file('media')) {
             $mediaFile = $request->file('media');
             $name = $mediaFile->getClientOriginalName();
             /**
@@ -167,8 +169,7 @@ class MediaController extends Controller
                     'message' => 'Media has been updated successfully',
                     'media' => $media,
                 ], 200);
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 return response()->json([
                     'is_success' => false,
                     'message' => 'Something went wrong when uploading your images, try again later',
@@ -187,7 +188,7 @@ class MediaController extends Controller
     public function destroy($id)
     {
         $media = Media::find($id);
-        if(!$media) {
+        if (!$media) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Media doesn\'t exist',
@@ -201,14 +202,13 @@ class MediaController extends Controller
             $fileUrl = $media->url;
             $file = str_replace('/storage', '', $fileUrl);
             Storage::disk('public')->delete($file);
-            if($storage) {
+            if ($storage) {
                 return response()->json([
                     'is_success' => true,
                     'message' => 'Media has been deleted',
                 ], 200);
             }
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Something went wrong when deleting your images, try again later',
