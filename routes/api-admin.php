@@ -47,3 +47,13 @@ Route::middleware(['api'])->prefix('media')->namespace('Admin')->group(function 
 
 Route::get('/media', 'Admin\MediaController@index');
 Route::get('/media/{id}', 'Admin\MediaController@show');
+
+// TAG ROUTES
+Route::get('/tags/{id}', 'Admin\TagController@show');
+Route::get('/tags', 'Admin\TagController@index');
+
+Route::group(['prefix' => 'tags', 'middleware' => ['auth:admins'], 'namespace' => 'Admin'], function () {
+    Route::post('/add', 'TagController@store');
+    Route::put('/update/{id}', 'TagController@update');
+    Route::delete('/delete/{id}', 'TagController@destroy');
+});
