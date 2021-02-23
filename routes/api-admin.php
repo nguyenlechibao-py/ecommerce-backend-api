@@ -40,6 +40,7 @@ Route::group(['prefix' => 'categories', 'middleware' => ['api']], function () {
 
 // MEDIA ROUTES
 Route::middleware(['api'])->prefix('media')->namespace('Admin')->group(function () {
+
     Route::post('/upload-new-media', 'MediaController@store');
     Route::put('/update/{id}', 'MediaController@update');
     Route::delete('/delete/{id}', 'MediaController@destroy');

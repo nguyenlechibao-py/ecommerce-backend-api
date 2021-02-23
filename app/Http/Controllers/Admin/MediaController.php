@@ -21,7 +21,10 @@ class MediaController extends Controller
      */
     public function index()
     {
-        return Media::all();
+        return response()->json([
+            'is_success' => true,
+            'data' => Media::all()
+        ]);
     }
 
     /**
@@ -201,11 +204,11 @@ class MediaController extends Controller
         try {
             $fileUrl = $media->url;
             $file = str_replace('/storage', '', $fileUrl);
-            Storage::disk('public')->delete($file);
+            $storage = Storage::disk('public')->delete($file);
             if ($storage) {
                 return response()->json([
                     'is_success' => true,
-                    'message' => 'Media has been deleted',
+                    'message' => 'Media has been deleted.',
                 ], 200);
             }
         } catch (Exception $e) {
