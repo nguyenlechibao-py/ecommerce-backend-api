@@ -32,7 +32,7 @@ Route::prefix('category')->middleware('auth:admins')->group(function () {
 Route::get('/categories/{id}', 'CategoryController@show');
 Route::get('/categories', 'CategoryController@index');
 
-Route::group(['prefix' => 'categories', 'middleware' => ['auth:admins']], function () {
+Route::group(['prefix' => 'categories', 'middleware' => ['api']], function () {
     Route::post('/add', 'CategoryController@store');
     Route::put('/update/{id}', 'CategoryController@update');
     Route::delete('/delete/{id}', 'CategoryController@destroy');
