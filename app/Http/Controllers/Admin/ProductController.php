@@ -23,16 +23,18 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $paginate = $request->query('paginate');
-        if($paginate == 0)
-            $products = Product::all();
-        else
-            $products = Product::paginate($paginate);
+        if(!isset($paginate) || empty($paginate))
+            $paginate = 10;
+        $products = Product::paginate($paginate);
         foreach($products as $product) {
             $product->media = Product::find($product->id)->media;
             $product->category = Product::find($product->id)->category;
             $product->tags = Product::find($product->id)->tags;
         }
-        return new ProductResource($products);
+        return response()->json([
+            'is_success' => true,
+            'data' => new ProductResource($products)
+        ]);
     }
 
     /**
