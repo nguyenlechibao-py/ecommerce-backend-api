@@ -11,7 +11,7 @@ class Product extends Model
 {
     protected $fillable = ['name', 'price', 'description', 'media_id', 'tag_id', 'category_id', 'quantity'];
 
-    protected $casts = ['category_id' => 'integer', 'media_id' => 'integer', 'tag_id' => 'array'];
+    protected $casts = ['category_id' => 'integer', 'media_id' => 'integer', 'quantity'=> 'integer', 'tag_id' => 'array'];
 
     public function category() {
         return $this->belongsTo(Category::class);
