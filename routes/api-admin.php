@@ -67,3 +67,13 @@ Route::group(['prefix' => 'products', 'middleware' => ['auth:admins'], 'namespac
     Route::put('/update/{id}', 'ProductController@update');
     Route::delete('/delete/{id}', 'ProductController@destroy');
 });
+
+// ORDER ROUTES
+Route::get('/orders/{id}', 'Admin\OrderController@show');
+Route::get('/orders', 'Admin\OrderController@index');
+
+Route::group(['prefix' => 'orders', 'middleware' => ['auth:admins'], 'namespace' => 'Admin'], function () {
+    Route::post('/add', 'OrderController@store');
+    Route::put('/update/{id}', 'OrderController@update');
+    Route::delete('/delete/{id}', 'OrderController@destroy');
+});
