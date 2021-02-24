@@ -23,16 +23,18 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $paginate = $request->query('paginate');
-        if($paginate == 0)
-            $products = Product::all();
-        else
-            $products = Product::paginate($paginate);
+        if(!isset($paginate) || empty($paginate))
+            $paginate = 10;
+        $products = Product::paginate($paginate);
         foreach($products as $product) {
             $product->media = Product::find($product->id)->media;
             $product->category = Product::find($product->id)->category;
             $product->tags = Product::find($product->id)->tags;
         }
-        return new ProductResource($products);
+        return response()->json([
+            'is_success' => true,
+            'data' => new ProductResource($products)
+        ]);
     }
 
     /**
@@ -131,7 +133,14 @@ class ProductController extends Controller
                 'message' => 'Product not found',
             ], 404);
         }
-        $validator = Validator::make($request->all(), $this->rules());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'description' => 'max:255',
+            'price' => 'max:11',
+            'quantity' => 'max:11',
+            'media_id' => 'max:11',
+            'category_id' => 'required|max:11',
+        ]);
         if ($validator->fails()) {
             return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
