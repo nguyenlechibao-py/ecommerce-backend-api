@@ -53,6 +53,7 @@ class ProductController extends Controller
             'price' => $request->price ?? 0,
             'media_id' => $request->media_id,
             'category_id' => $request->category_id,
+            'quantity' => $request->quantity,
         ]);
         // add tag
         if(!empty($request->tags)) {
