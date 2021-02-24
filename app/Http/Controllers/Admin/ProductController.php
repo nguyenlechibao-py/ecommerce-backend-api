@@ -133,7 +133,14 @@ class ProductController extends Controller
                 'message' => 'Product not found',
             ], 404);
         }
-        $validator = Validator::make($request->all(), $this->rules());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'description' => 'max:255',
+            'price' => 'max:11',
+            'quantity' => 'max:11',
+            'media_id' => 'max:11',
+            'category_id' => 'required|max:11',
+        ]);
         if ($validator->fails()) {
             return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
