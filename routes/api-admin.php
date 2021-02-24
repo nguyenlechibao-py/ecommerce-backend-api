@@ -58,3 +58,13 @@ Route::group(['prefix' => 'tags', 'middleware' => ['auth:admins'], 'namespace' =
     Route::put('/update/{id}', 'TagController@update');
     Route::delete('/delete/{id}', 'TagController@destroy');
 });
+
+// PRODUCT ROUTES
+Route::get('/products/{id}', 'Admin\ProductController@show');
+Route::get('/products', 'Admin\ProductController@index');
+
+Route::group(['prefix' => 'products', 'middleware' => ['auth:admins'], 'namespace' => 'Admin'], function () {
+    Route::post('/add', 'ProductController@store');
+    Route::put('/update/{id}', 'ProductController@update');
+    Route::delete('/delete/{id}', 'ProductController@destroy');
+});
