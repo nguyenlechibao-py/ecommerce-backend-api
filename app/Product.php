@@ -9,19 +9,22 @@ use App\Media;
 
 class Product extends Model
 {
-    protected $fillable = ['name', 'price', 'description', 'media_id', 'tag_id', 'category_id'];
+    protected $fillable = ['name', 'price', 'description', 'media_id', 'tag_id', 'category_id', 'quantity'];
 
     protected $casts = ['category_id' => 'integer', 'media_id' => 'integer', 'tag_id' => 'array'];
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function media() {
+    public function media()
+    {
         return $this->belongsTo(Media::class);
     }
 
-    public function tags() {
+    public function tags()
+    {
         return $this->belongsToMany(Tag::class);
     }
 }
