@@ -7,6 +7,7 @@ use App\Category;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Media;
 
 class CategoryController extends Controller
 {
@@ -15,9 +16,20 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new CategoryResource(Category::all());
+        $paginate = $request->query('paginate');
+        if(!isset($paginate) || empty($paginate)) {
+            $paginate = 10;
+        }
+        $categories = Category::paginate($paginate);
+        foreach ($categories as $category) {
+            $category->media;
+        }
+        return response()->json([
+            'is_success' => true,
+            'data' => new CategoryResource($categories),
+        ], 200);
     }
 
     /**
@@ -35,8 +47,9 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description ?? "",
-            'image' => $request->image ?? "",
+            'media_id' => $request->media_id ?? "",
         ]);
+        $category->media;
         return response()->json(['is_success' => true, 'message' => 'Category has been created', 'data' => $category]);
     }
 
@@ -51,7 +64,11 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (!$category)
             return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
-        return new CategoryResource($category);
+        $category->media;
+        return response()->json([
+            'is_success' => true,
+            'data' => new CategoryResource($category), 
+        ], 200);
     }
 
     /**
@@ -70,12 +87,13 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'unique:categories|max:255',
             'description' => 'max:255',
-            'image' => 'max:255',
+            'media_id' => 'max:255',
         ]);
         if ($validator->fails()) {
             return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
         }
         $category->update($request->all());
+        $category->media;
         return response()->json(['is_success' => true, 'message' => 'Category has been updated', 'data' => $category], 200);
     }
 
@@ -105,7 +123,7 @@ class CategoryController extends Controller
         return [
             'name' => 'required|unique:categories|max:255',
             'description' => 'max:255',
-            'image' => 'max:255',
+            'media_id' => 'max:255',
         ];
     }
 }
