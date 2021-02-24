@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return new CategoryResource(Category::all());
+        return response()->json(['is_success' => true, 'data' => Category::all()]);
     }
 
     /**
