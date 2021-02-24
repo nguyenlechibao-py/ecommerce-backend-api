@@ -145,7 +145,7 @@ class MediaController extends Controller
         // delete old image
         $fileUrl = $media->url;
         $file = str_replace('/storage', '', $fileUrl);
-        Storage::disk('public')->delete($file);
+        $storage = Storage::disk('public')->delete($file);
         // check media and update
         if($request->file('media')) {
             $mediaFile = $request->file('media');
