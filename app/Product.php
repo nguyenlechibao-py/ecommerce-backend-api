@@ -9,7 +9,7 @@ use App\Media;
 
 class Product extends Model
 {
-    protected $fillable = ['name', 'price', 'description', 'media_id', 'tag_id', 'category_id', 'quantity'];
+    protected $fillable = ['name', 'price', 'description', 'media_id', 'tag_id', 'category_id', 'quantity', 'is_show'];
 
     protected $casts = ['category_id' => 'integer', 'media_id' => 'integer', 'quantity'=> 'integer', 'tag_id' => 'array'];
 
