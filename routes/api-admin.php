@@ -60,7 +60,7 @@ Route::group(['prefix' => 'tags', 'middleware' => ['auth:admins'], 'namespace' =
 });
 
 // PRODUCT ROUTES
-Route::get('/products/{id}', 'Admin\ProductController@show');
+Route::get('/products/{id}', 'Admin\ProductController@show')->middleware('view.product');
 Route::get('/products', 'Admin\ProductController@index');
 
 Route::group(['prefix' => 'products', 'middleware' => ['api'], 'namespace' => 'Admin'], function () {

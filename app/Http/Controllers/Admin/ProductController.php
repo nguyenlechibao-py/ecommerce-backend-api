@@ -9,8 +9,6 @@ use App\Http\Resources\ProductResource;
 use App\Product;
 use \Exception;
 use \Validator;
-use App\Tag;
-use App\Category;
 
 class ProductController extends Controller
 {
@@ -33,8 +31,8 @@ class ProductController extends Controller
         }
         return response()->json([
             'is_success' => true,
-            'data' => new ProductResource($products)
-        ]);
+            'data' => new ProductResource($products),
+        ], 200);
     }
 
     /**
@@ -56,6 +54,7 @@ class ProductController extends Controller
             'media_id' => $request->media_id,
             'category_id' => $request->category_id,
             'quantity' => $request->quantity,
+            'is_show' => $request->is_show,
         ]);
         // add tag
         if(!empty($request->tags)) {
@@ -106,11 +105,9 @@ class ProductController extends Controller
         // include tags in response
         $product->tags;
         // convert category_id to category
-        $category = Product::find($product->id)->category;
-        $product->category = $category;
+        $product->category = Product::find($product->id)->category;
         // convert media
-        $media = Product::find($product->id)->media;
-        $product->media = $media;
+        $product->media = Product::find($product->id)->media;
         return response()->json([
             'is_success' => true,
             'data' => new ProductResource($product),
@@ -151,6 +148,7 @@ class ProductController extends Controller
             'quantity' => $request->quantity ?? 0,
             'media_id' => $request->media_id,
             'category_id' => $request->category_id,
+            'is_show' => $request->is_show,
         ]);
         // add tag
         if(!empty($request->tags)) {
