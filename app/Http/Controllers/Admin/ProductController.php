@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         $paginate = $request->query('paginate');
         if(!isset($paginate) || empty($paginate))
-            $paginate = 10;
+            $paginate = 20;
         $products = Product::paginate($paginate);
         foreach($products as $product) {
             $product->media = Product::find($product->id)->media;
