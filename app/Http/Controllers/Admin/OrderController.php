@@ -34,10 +34,6 @@ class OrderController extends Controller
             'is_success' => true,
             'data' => $orders,
         ]);
-        return response()->json([
-            'is_sucess' => true,
-            'data' => $orders,
-        ]);
     }
 
     /**
