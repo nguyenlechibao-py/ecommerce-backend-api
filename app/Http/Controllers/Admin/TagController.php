@@ -18,9 +18,16 @@ class TagController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new TagResource(Tag::all());
+        $paginate = $request->query('paginate');
+        if(empty($paginate)) {
+            $paginate = 20;
+        }
+        return response()->json([
+            'is_success' => true,
+            'data' => new TagResource(Tag::paginate($paginate)),
+        ]);
     }
 
     /**
@@ -52,7 +59,10 @@ class TagController extends Controller
         $tag = Tag::find($id);
         if (!$tag)
             return response()->json(['is_success' => false, 'message' => 'Tag doesn\'t exist'], 404);
-        return new TagResource($tag);
+        return response()->json([
+            'is_success' => true,
+            'data' => new TagResource($tag),
+        ]);
     }
 
     /**
@@ -69,7 +79,7 @@ class TagController extends Controller
             return response()->json(['is_success' => false, 'message' => 'Tag doesn\'t exist'], 404);
         }
         $validator = Validator::make($request->all(), [
-            'name' => 'unique:tags|max:255',
+            'name' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
