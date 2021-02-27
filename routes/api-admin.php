@@ -73,7 +73,7 @@ Route::get('/orders/{id}', 'Admin\OrderController@show');
 Route::get('/orders', 'Admin\OrderController@index');
 
 Route::group(['prefix' => 'orders', 'middleware' => ['auth:admins'], 'namespace' => 'Admin'], function () {
-    Route::post('/add', 'OrderController@store');
+    Route::post('/add', 'OrderController@store')->middleware('count.product');
     Route::put('/update/{id}', 'OrderController@update');
     Route::delete('/delete/{id}', 'OrderController@destroy');
 });

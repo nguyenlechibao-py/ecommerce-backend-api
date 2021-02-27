@@ -73,7 +73,6 @@ class OrderController extends Controller
             return response()->json([
                 'is_success' => false,
                 'message' => 'Cart must not be empty',
-                'data' => $products,
             ]);
         // add product to pivot
         if(is_array($products)) {
