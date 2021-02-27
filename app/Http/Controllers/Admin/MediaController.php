@@ -18,9 +18,16 @@ class MediaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Media::all();
+        $paginate = $request->query('paginate');
+        if(empty($paginate))
+            $paginate = 10;
+        $media = Media::paginate($paginate);
+        return response()->json([
+            'is_success' => true,
+            'data' => $media,
+        ]);
     }
 
     /**
