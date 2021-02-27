@@ -57,7 +57,6 @@ class MediaController extends Controller
                 'errors' => $validator->errors()
             ], 401);
         }
-
         if ($request->file('media')) {
             // store media into /storage/uploads folder
             $mediaPath = $request->file('media');
@@ -148,6 +147,13 @@ class MediaController extends Controller
                 'message' => 'Validator fails',
                 'errors' => $validator->errors()
             ], 401);
+        }
+        // check media in request
+        if(empty($request->file('media'))) {
+            return response()->json([
+                'is_success' => false,
+                'message' => 'There\'s not any media file in your request',
+            ], Response::HTTP_BAD_REQUEST);
         }
         // delete old image
         $fileUrl = $media->url;
