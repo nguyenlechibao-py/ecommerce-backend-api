@@ -15,9 +15,20 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['is_success' => true, 'data' => Category::all()]);
+        $paginate = $request->query('paginate');
+        if(empty($paginate)) {
+            $paginate = 20;
+        }
+        $categories = Category::paginate($paginate);
+        foreach($categories as $category) {
+            $category->media;
+        }
+        return response()->json([
+            'is_success' => true, 
+            'data' => new CategoryResource($categories),
+        ]);
     }
 
     /**
@@ -35,9 +46,14 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description ?? "",
-            'image' => $request->image ?? "",
+            'media_id' => $request->media_id,
         ]);
-        return response()->json(['is_success' => true, 'message' => 'Category has been created', 'data' => $category]);
+        $category->media;
+        return response()->json([
+            'is_success' => true, 
+            'message' => 'Category has been created', 
+            'data' => $category,
+        ]);
     }
 
     /**
@@ -50,8 +66,15 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if (!$category)
-            return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
-        return new CategoryResource($category);
+            return response()->json([
+                'is_success' => false, 
+                'message' => 'Category doesn\'t exist'
+            ], 404);
+        $category->media;
+        return response()->json([
+            'is_success' => true,
+            'data' => new CategoryResource($category),
+        ]);
     }
 
     /**
@@ -65,18 +88,29 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if (!$category) {
-            return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
+            return response()->json([
+                'is_success' => false, 
+                'message' => 'Category doesn\'t exist'
+            ], 404);
         }
         $validator = Validator::make($request->all(), [
-            'name' => 'unique:categories|max:255',
+            'name' => 'required|max:255',
             'description' => 'max:255',
-            'image' => 'max:255',
+            'media_id' => 'max:255',
         ]);
         if ($validator->fails()) {
-            return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
+            return response()->json([
+                'is_success' => false,
+                'message' => $validator->messages(),
+            ], Response::HTTP_BAD_REQUEST);
         }
         $category->update($request->all());
-        return response()->json(['is_success' => true, 'message' => 'Category has been updated', 'data' => $category], 200);
+        $category->media;
+        return response()->json([
+            'is_success' => true, 
+            'message' => 'Category has been updated', 
+            'data' => $category
+        ], 200);
     }
 
     /**
@@ -89,10 +123,16 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if (!$category) {
-            return response()->json(['is_success' => false, 'message' => 'Category doesn\'t exist'], 404);
+            return response()->json([
+                'is_success' => false, 
+                'message' => 'Category doesn\'t exist'
+            ], 404);
         }
         $category->delete();
-        return response()->json(['is_success' => true, 'message' => 'Category has been deleted'], 200);
+        return response()->json([
+            'is_success' => true, 
+            'message' => 'Category has been deleted'
+        ], 200);
     }
 
     /**

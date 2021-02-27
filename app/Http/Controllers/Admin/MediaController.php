@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
-use Intervention\Image\Facades\Image;
 
 class MediaController extends Controller
 {
@@ -19,11 +18,15 @@ class MediaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $paginate = $request->query('paginate');
+        if(empty($paginate))
+            $paginate = 20;
+        $media = Media::paginate($paginate);
         return response()->json([
             'is_success' => true,
-            'data' => Media::all()
+            'data' => $media,
         ]);
     }
 
@@ -46,7 +49,6 @@ class MediaController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), $this->rules());
-        // var_dump($request->all());
 
         if ($validator->fails()) {
             return response()->json([
@@ -55,8 +57,7 @@ class MediaController extends Controller
                 'errors' => $validator->errors()
             ], 401);
         }
-
-        if ($request->get('media')) {
+        if ($request->file('media')) {
             // store media into /storage/uploads folder
             $mediaPath = $request->file('media');
             $name = $mediaPath->getClientOriginalName();
@@ -100,7 +101,7 @@ class MediaController extends Controller
     public function show($id)
     {
         $media = Media::find($id);
-        if (!$media) {
+        if(!$media) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Media doesn\'t exist',
@@ -133,7 +134,7 @@ class MediaController extends Controller
     public function update(Request $request, $id)
     {
         $media = Media::find($id);
-        if (!$media) {
+        if(!$media) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Media doesn\'t exist',
@@ -147,12 +148,19 @@ class MediaController extends Controller
                 'errors' => $validator->errors()
             ], 401);
         }
+        // check media in request
+        if(empty($request->file('media'))) {
+            return response()->json([
+                'is_success' => false,
+                'message' => 'There\'s not any media file in your request',
+            ], Response::HTTP_BAD_REQUEST);
+        }
         // delete old image
         $fileUrl = $media->url;
         $file = str_replace('/storage', '', $fileUrl);
         Storage::disk('public')->delete($file);
         // check media and update
-        if ($request->file('media')) {
+        if($request->file('media')) {
             $mediaFile = $request->file('media');
             $name = $mediaFile->getClientOriginalName();
             /**
@@ -172,7 +180,8 @@ class MediaController extends Controller
                     'message' => 'Media has been updated successfully',
                     'media' => $media,
                 ], 200);
-            } catch (Exception $e) {
+            }
+            catch(Exception $e) {
                 return response()->json([
                     'is_success' => false,
                     'message' => 'Something went wrong when uploading your images, try again later',
@@ -191,7 +200,7 @@ class MediaController extends Controller
     public function destroy($id)
     {
         $media = Media::find($id);
-        if (!$media) {
+        if(!$media) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Media doesn\'t exist',
@@ -205,13 +214,14 @@ class MediaController extends Controller
             $fileUrl = $media->url;
             $file = str_replace('/storage', '', $fileUrl);
             $storage = Storage::disk('public')->delete($file);
-            if ($storage) {
+            if($storage) {
                 return response()->json([
                     'is_success' => true,
                     'message' => 'Media has been deleted.',
                 ], 200);
             }
-        } catch (Exception $e) {
+        }
+        catch(Exception $e) {
             return response()->json([
                 'is_success' => false,
                 'message' => 'Something went wrong when deleting your images, try again later',
