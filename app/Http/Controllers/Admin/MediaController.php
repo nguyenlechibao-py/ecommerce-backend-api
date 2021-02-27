@@ -22,7 +22,7 @@ class MediaController extends Controller
     {
         $paginate = $request->query('paginate');
         if(empty($paginate))
-            $paginate = 10;
+            $paginate = 20;
         $media = Media::paginate($paginate);
         return response()->json([
             'is_success' => true,
