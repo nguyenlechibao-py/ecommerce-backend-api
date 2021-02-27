@@ -24,7 +24,7 @@ class OrderController extends Controller
     {
         $paginate = $request->query('paginate');
         if(empty($paginate)) {
-            $paginate = 10;
+            $paginate = 20;
         }
         $orders = Order::paginate($paginate);
         foreach ($orders as $order) {
