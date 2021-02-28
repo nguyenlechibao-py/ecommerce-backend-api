@@ -60,11 +60,11 @@ Route::group(['prefix' => 'tags', 'middleware' => ['auth:admins'], 'namespace' =
 });
 
 // PRODUCT ROUTES
-Route::get('/products/{id}', 'Admin\ProductController@show');
+Route::get('/products/{slug}', 'Admin\ProductController@show');
 Route::get('/products', 'Admin\ProductController@index');
 
 Route::group(['prefix' => 'products', 'middleware' => ['api'], 'namespace' => 'Admin'], function () {
     Route::post('/add', 'ProductController@store');
-    Route::put('/update/{id}', 'ProductController@update');
-    Route::delete('/delete/{id}', 'ProductController@destroy');
+    Route::put('/update/{slug}', 'ProductController@update');
+    Route::delete('/delete/{slug}', 'ProductController@destroy');
 });

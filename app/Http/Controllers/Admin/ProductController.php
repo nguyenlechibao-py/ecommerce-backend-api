@@ -11,6 +11,7 @@ use \Exception;
 use \Validator;
 use App\Tag;
 use App\Category;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -24,7 +25,7 @@ class ProductController extends Controller
     {
         $paginate = $request->query('paginate');
         if(!isset($paginate) || empty($paginate))
-            $paginate = 10;
+            $paginate = 20;
         $products = Product::paginate($paginate);
         foreach($products as $product) {
             $product->media = Product::find($product->id)->media;
@@ -56,6 +57,7 @@ class ProductController extends Controller
             'media_id' => $request->media_id,
             'category_id' => $request->category_id,
             'quantity' => $request->quantity,
+            'slug' => $request->slug ?? Str::slug($request->name, '-'),
         ]);
         // add tag
         if(!empty($request->tags)) {
@@ -94,9 +96,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $product = Product::find($id);
+        $product = Product::where('slug', $slug)->first();
         if(!$product) {
             return response()->json([
                 'is_success' => false,
@@ -106,11 +108,9 @@ class ProductController extends Controller
         // include tags in response
         $product->tags;
         // convert category_id to category
-        $category = Product::find($product->id)->category;
-        $product->category = $category;
+        $product->category = Product::find($product->id)->category;
         // convert media
-        $media = Product::find($product->id)->media;
-        $product->media = $media;
+        $product->media = Product::find($product->id)->media;
         return response()->json([
             'is_success' => true,
             'data' => new ProductResource($product),
@@ -124,9 +124,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        $product = Product::find($id);
+        $product = Product::where('slug', $slug)->first();
         if(!$product) {
             return response()->json([
                 'is_success' => false,
@@ -140,6 +140,7 @@ class ProductController extends Controller
             'quantity' => 'max:11',
             'media_id' => 'max:11',
             'category_id' => 'required|max:11',
+            'slug' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             return response()->json(['is_success' => false, 'message' => $validator->messages()], Response::HTTP_BAD_REQUEST);
@@ -151,6 +152,7 @@ class ProductController extends Controller
             'quantity' => $request->quantity ?? 0,
             'media_id' => $request->media_id,
             'category_id' => $request->category_id,
+            'slug' => $request->slug ?? Str::slug($request->name, '-'),
         ]);
         // add tag
         if(!empty($request->tags)) {
@@ -183,9 +185,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $product = Product::find($id);
+        $product = Product::where('slug', $slug)->first();
         if(!$product) {
             return response()->json([
                 'is_success' => false,
@@ -223,6 +225,7 @@ class ProductController extends Controller
             'quantity' => 'max:11',
             'media_id' => 'max:11',
             'category_id' => 'required|max:11',
+            'slug' => 'max:255',
         ];
     }
 }

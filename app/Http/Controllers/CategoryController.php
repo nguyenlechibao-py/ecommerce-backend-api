@@ -105,7 +105,7 @@ class CategoryController extends Controller
             'name' => 'required|max:255',
             'description' => 'max:255',
             'image' => 'max:255',
-            'slug' => 'required|max:255',
+            'slug' => 'max:255',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -113,7 +113,12 @@ class CategoryController extends Controller
                 'message' => $validator->messages(),
             ], Response::HTTP_BAD_REQUEST);
         }
-        $category->update($request->all());
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description ?? "",
+            'image' => $request->image,
+            'slug' => $request->slug ?? Str::slug($request->name, '-'),
+        ]);
         $category->media;
         return response()->json([
             'is_success' => true, 
