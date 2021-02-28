@@ -46,7 +46,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'description' => $request->description ?? "",
-            'media_id' => $request->media_id,
+            'image' => $request->image,
         ]);
         $category->media;
         return response()->json([
@@ -96,7 +96,7 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'description' => 'max:255',
-            'media_id' => 'max:255',
+            'image' => 'max:255',
         ]);
         if ($validator->fails()) {
             return response()->json([
