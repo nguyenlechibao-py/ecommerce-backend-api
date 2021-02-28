@@ -71,6 +71,7 @@ class CategoryController extends Controller
                 'message' => 'Category doesn\'t exist'
             ], 404);
         $category->media;
+        $category->products;
         return response()->json([
             'is_success' => true,
             'data' => new CategoryResource($category),

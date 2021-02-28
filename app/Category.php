@@ -11,4 +11,8 @@ class Category extends Model
     public function media() {
         return $this->belongsTo('App\Media', 'image', 'id');
     }
+
+    public function products() {
+        return $this->hasMany('App\Product');
+    }
 }
