@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Product;
+use Exception;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -48,11 +50,12 @@ class CategoryController extends Controller
             'name' => $request->name,
             'description' => $request->description ?? "",
             'image' => $request->image,
+            'slug' => $request->slug ?? Str::slug($request->name, '-'),
         ]);
         $category->media;
         return response()->json([
             'is_success' => true, 
-            'message' => 'Category has been created', 
+            'message' => 'Category has been created',
             'data' => $category,
         ]);
     }
@@ -63,9 +66,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $category = Category::find($id);
+        $category = Category::where('slug', $slug)->first();
         if (!$category)
             return response()->json([
                 'is_success' => false, 
@@ -89,9 +92,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        $category = Category::find($id);
+        $category = Category::where('slug', $slug)->first();
         if (!$category) {
             return response()->json([
                 'is_success' => false, 
@@ -102,6 +105,7 @@ class CategoryController extends Controller
             'name' => 'required|max:255',
             'description' => 'max:255',
             'image' => 'max:255',
+            'slug' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -124,16 +128,24 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $category = Category::find($id);
-        if (!$category) {
+        try {
+            $category = Category::where('slug', $slug)->first();
+            if (!$category) {
+                return response()->json([
+                    'is_success' => false, 
+                    'message' => 'Category doesn\'t exist'
+                ], 404);
+            }
+            $category->delete();
+        }
+        catch(Exception $e) {
             return response()->json([
                 'is_success' => false, 
-                'message' => 'Category doesn\'t exist'
-            ], 404);
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
         }
-        $category->delete();
         return response()->json([
             'is_success' => true, 
             'message' => 'Category has been deleted'
@@ -151,6 +163,7 @@ class CategoryController extends Controller
             'name' => 'required|unique:categories|max:255',
             'description' => 'max:255',
             'image' => 'max:255',
+            'slug' => 'max:255',
         ];
     }
 }

@@ -29,13 +29,13 @@ Route::prefix('category')->middleware('auth:admins')->group(function () {
     Route::post('/add-new-category', 'CategoryController@store');
 });
 
-Route::get('/categories/{id}', 'CategoryController@show');
+Route::get('/categories/{slug}', 'CategoryController@show');
 Route::get('/categories', 'CategoryController@index');
 
 Route::group(['prefix' => 'categories', 'middleware' => ['api']], function () {
     Route::post('/add', 'CategoryController@store');
-    Route::put('/update/{id}', 'CategoryController@update');
-    Route::delete('/delete/{id}', 'CategoryController@destroy');
+    Route::put('/update/{slug}', 'CategoryController@update');
+    Route::delete('/delete/{slug}', 'CategoryController@destroy');
 });
 
 // MEDIA ROUTES
