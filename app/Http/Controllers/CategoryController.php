@@ -7,6 +7,7 @@ use App\Category;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Product;
 
 class CategoryController extends Controller
 {
@@ -72,6 +73,9 @@ class CategoryController extends Controller
             ], 404);
         $category->media;
         $category->products;
+        foreach ($category->products as $product) {
+            $product->media = Product::find($product->id)->media;
+        }
         return response()->json([
             'is_success' => true,
             'data' => new CategoryResource($category),
