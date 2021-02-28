@@ -176,7 +176,7 @@ class OrderController extends Controller
             ]);
         }
         // include products in order response
-        $order->products;
+        $order->pivot;
         return response()->json([
             'is_success' => true,
             'message' => 'Order has been updated',
