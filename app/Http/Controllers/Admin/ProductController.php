@@ -152,7 +152,7 @@ class ProductController extends Controller
             'quantity' => $request->quantity ?? 0,
             'media_id' => $request->media_id,
             'category_id' => $request->category_id,
-            'slug' => $request->slug,
+            'slug' => $request->slug ?? Str::slug($request->name, '-'),
         ]);
         // add tag
         if(!empty($request->tags)) {
