@@ -79,7 +79,12 @@ class UserController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('user', 'token'), 201);
+        return response()->json([ 
+            'is_success' => true,
+            'user' => $user,
+            'token_type' => 'bearer',
+            'access_token' => $token,
+        ], 201);
     }
 
     /** 
@@ -89,7 +94,10 @@ class UserController extends Controller
      */
     public function profile()
     {
-        return response()->json(auth()->user());
+        return response()->json([
+            'is_success' => true, 
+            'data' => auth()->user(),
+        ]);
     }
 
     /**
