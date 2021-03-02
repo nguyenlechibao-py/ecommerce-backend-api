@@ -62,9 +62,9 @@
         <tr>
             <th scope="row">{{ $product->id }}</th>
             <td>{{ $product->name }}</td>
-            <td align="right">{{ $product->quantity }}</td>
-            <td align="right">{{ $product->unit_price }}</td>
-            <td align="right">{{ $product->unit_price * $product->quantity }}</td>
+            <td align="right">{{ $product->pivot->quantity }}</td>
+            <td align="right">{{ $product->pivot->unit_price }}</td>
+            <td align="right">{{ $product->pivot->unit_price * $product->pivot->quantity }}</td>
         </tr>
         @endforeach
     </tbody>
