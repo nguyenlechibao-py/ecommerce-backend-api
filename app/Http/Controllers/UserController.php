@@ -81,7 +81,9 @@ class UserController extends Controller
 
         return response()->json([ 
             'is_success' => true,
-            compact('user', 'token'),
+            'user' => $user,
+            'token_type' => 'bearer',
+            'access_token' => $token,
         ], 201);
     }
 
