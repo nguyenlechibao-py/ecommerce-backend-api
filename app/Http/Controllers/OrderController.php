@@ -102,6 +102,7 @@ class OrderController extends Controller
         return \response()->json([
             'is_success' => true,
             'data' => $order,
+            'message' => 'Đặt hàng thành công, vui lòng kiểm tra mail',
         ], 200);
     }
 
