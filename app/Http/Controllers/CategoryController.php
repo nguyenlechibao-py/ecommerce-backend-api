@@ -108,4 +108,9 @@ class CategoryController extends Controller
             'image' => 'max:255',
         ];
     }
+
+    public function search() {
+        
+        return response()->json([]);
+    }
 }
